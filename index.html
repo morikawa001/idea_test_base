@@ -347,6 +347,34 @@ const MAIL_TO = 'ns.morizo@gmail.com';
 let startTime = null;
 const NAME_NG_WORDS = ['匿名', '無記名', 'anonymous', 'anon', '名無し', 'なし', 'ない', 'none', 'no name'];
 
+let formCompleted = false;
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbym7HeLAHQrwLjebH0OCZnBcqpmvyP2ZcMS235f_myvtuqvqVy9J7xj6I7FyB4KnMFF/exec';
+const SESSION_ID = new URLSearchParams(window.location.search).get('sid')
+                   || 'direct_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+const FORM_TYPE = new URLSearchParams(window.location.search).get('ft') || 'C';
+
+function sendLog(status, step) {
+  fetch(GAS_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      timestamp: new Date().toISOString(),
+      form_type: FORM_TYPE,
+      last_step: step,
+      status: status,
+      session_id: SESSION_ID
+    }),
+    keepalive: true
+  }).catch(function() {});
+}
+
+sendLog('form_opened', 0);
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && !formCompleted) {
+    sendLog('abandoned', 0);
+  }
+});
+  
 document.addEventListener('input',  () => { if (!startTime) startTime = new Date(); });
 document.addEventListener('change', () => { if (!startTime) startTime = new Date(); });
 
