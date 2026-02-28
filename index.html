@@ -278,6 +278,9 @@ button:active { transform: scale(0.97); }
       <button type="button" class="btn-reset" onclick="resetForm()">🔄 やり直す</button>
       <button type="button" class="btn-preview" onclick="showPreview()">👁️ 内容を確認して送信</button>
     </div>
+      <div style="display:flex; justify-content:center; margin-top:12px;">
+      <button type="button" class="btn-finish" onclick="showEndScreen()">✅ 終了</button>
+    </div>
   </div>
 
   <!-- 終了画面 -->
@@ -307,6 +310,9 @@ button:active { transform: scale(0.97); }
     <div class="modal-btn-row">
       <button class="btn-mail"  onclick="sendMail()">✉️ メールで送信</button>
       <button class="btn-close" onclick="closePreviewAndThank()">✖ 閉じる</button>
+      <div style="display:flex; justify-content:center; margin-top:10px;">
+      <button class="btn-finish" onclick="closePreviewModal(); showEndScreen();">✅ 送信せずに終了</button>
+    </div>
     </div>
   </div>
 </div>
