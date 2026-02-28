@@ -308,12 +308,13 @@ button:active { transform: scale(0.97); }
     <h2>📋 入力内容の確認</h2>
     <p style="font-size:0.85em;color:#666;margin-bottom:12px;">以下の内容で提出します。内容を確認してメールで送信してください。</p>
     <pre id="previewText"></pre>
-    <div class="modal-btn-row">
-      <button class="btn-mail"  onclick="sendMail()">✉️ メールで送信</button>
-      <button class="btn-close" onclick="closePreviewAndThank()">✖ 閉じる</button>
-      <div style="display:flex; justify-content:center; margin-top:10px;">
-      <button class="btn-finish" onclick="closePreviewModal(); showEndScreen();">✅ 送信せずに終了</button>
-    </div>
+  <div class="modal-btn-row">
+  <button class="btn-mail"  onclick="sendMail()">✉️ メールで送信</button>
+  <button class="btn-close" onclick="closePreviewAndThank()">✖ 閉じる</button>
+</div>
+<div style="display:flex; justify-content:center; margin-top:10px;">
+  <button class="btn-finish" onclick="closePreviewModal(); showEndScreen();">✅ 送信せずに終了</button>
+</div>
     </div>
   </div>
 </div>
@@ -474,6 +475,13 @@ function resetForm() {
 function restartFromEnd() {
   document.getElementById('endScreen').classList.remove('active');
   resetForm();
+}
+
+function showEndScreen() {
+  if (!formCompleted) sendLog('abandoned_end_btn', 0);
+  document.getElementById('mainBlock').style.display = 'none';  // フォームを隠す
+  document.getElementById('endScreen').classList.add('active'); // 終了画面を表示
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
