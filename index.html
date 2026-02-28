@@ -471,6 +471,8 @@ function showPreview() {
 function sendMail() {
   const body    = encodeURIComponent(buildText() + '\n\n\n--- CSV形式（システム取込用） ---\n' + buildCsvText());
   const subject = encodeURIComponent(`【アイデア提案】${getVal('q2')}（${getVal('q1')}）`);
+    formCompleted = true;
+  sendLog('completed', 0);
   window.location.href = `mailto:${MAIL_TO}?subject=${subject}&body=${body}`;
   closePreviewModal();
   showThankModal();
@@ -495,6 +497,7 @@ function resetForm() {
   document.querySelectorAll('.radio-group label').forEach(l => l.classList.remove('selected'));
   document.getElementById('freetext').value = '';
   startTime = null;
+  formCompleted = false; 
   document.getElementById('mainBlock').style.display = '';
   document.getElementById('endScreen').classList.remove('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -507,8 +510,8 @@ function restartFromEnd() {
 
 function showEndScreen() {
   if (!formCompleted) sendLog('abandoned_end_btn', 0);
-  document.getElementById('mainBlock').style.display = 'none';  // フォームを隠す
-  document.getElementById('endScreen').classList.add('active'); // 終了画面を表示
+  document.getElementById('mainBlock').style.display = 'none';
+  document.getElementById('endScreen').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
