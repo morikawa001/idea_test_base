@@ -279,7 +279,7 @@ button:active { transform: scale(0.97); }
       <button type="button" class="btn-reset" onclick="resetForm()">🔄 やり直す</button>
       <button type="button" class="btn-preview" onclick="showPreview()">👁️ 内容を確認して送信</button>
     </div>
-      <div style="display:flex; justify-content:center; margin-top:12px;">
+    <div style="display:flex; justify-content:center; margin-top:12px;">
       <button type="button" class="btn-finish" onclick="showEndScreen()">✅ 終了</button>
     </div>
   </div>
@@ -308,13 +308,12 @@ button:active { transform: scale(0.97); }
     <h2>📋 入力内容の確認</h2>
     <p style="font-size:0.85em;color:#666;margin-bottom:12px;">以下の内容で提出します。内容を確認してメールで送信してください。</p>
     <pre id="previewText"></pre>
-  <div class="modal-btn-row">
-  <button class="btn-mail"  onclick="sendMail()">✉️ メールで送信</button>
-  <button class="btn-close" onclick="closePreviewAndThank()">✖ 閉じる</button>
-</div>
-<div style="display:flex; justify-content:center; margin-top:10px;">
-  <button class="btn-finish" onclick="closePreviewModal(); showEndScreen();">✅ 送信せずに終了</button>
-</div>
+    <div class="modal-btn-row">
+      <button class="btn-mail"  onclick="sendMail()">✉️ メールで送信</button>
+      <button class="btn-close" onclick="closePreviewAndThank()">✖ 閉じる</button>
+    </div>
+    <div style="display:flex; justify-content:center; margin-top:10px;">
+      <button class="btn-finish" onclick="closePreviewModal(); showEndScreen();">✅ 送信せずに終了</button>
     </div>
   </div>
 </div>
@@ -335,6 +334,10 @@ button:active { transform: scale(0.97); }
     <div class="thank-reply-box">
       📧 返信先：<span class="reply-email" id="thank-reply-email"></span>
     </div>
+    <!-- ① カウントダウン表示を追加 -->
+    <p id="close-countdown-wrap" style="font-size:0.82em; color:#888; margin-bottom:12px;">
+      <span id="close-countdown">3</span> 秒後に自動的に閉じます
+    </p>
     <div class="thank-btn-row">
       <button class="btn-new-idea" onclick="startNewIdea()">💡 新しいアイデアを提案する</button>
       <button class="btn-just-close" onclick="closeThankModal()">このまま閉じる</button>
@@ -374,7 +377,7 @@ document.addEventListener('visibilitychange', function() {
     sendLog('abandoned', 0);
   }
 });
-  
+
 document.addEventListener('input',  () => { if (!startTime) startTime = new Date(); });
 document.addEventListener('change', () => { if (!startTime) startTime = new Date(); });
 
@@ -468,14 +471,39 @@ function showPreview() {
   document.getElementById('previewModal').classList.add('active');
 }
 
+// ② sendMail() に startCloseCountdown(3) を追加
 function sendMail() {
   const body    = encodeURIComponent(buildText() + '\n\n\n--- CSV形式（システム取込用） ---\n' + buildCsvText());
   const subject = encodeURIComponent(`【アイデア提案】${getVal('q2')}（${getVal('q1')}）`);
-    formCompleted = true;
+  formCompleted = true;
   sendLog('completed', 0);
   window.location.href = `mailto:${MAIL_TO}?subject=${subject}&body=${body}`;
   closePreviewModal();
   showThankModal();
+  startCloseCountdown(3); // ← 追加
+}
+
+// ② カウントダウン関数を追加
+function startCloseCountdown(seconds) {
+  let remaining = seconds;
+  const countdownEl = document.getElementById('close-countdown');
+  if (countdownEl) countdownEl.textContent = remaining;
+
+  const timer = setInterval(() => {
+    remaining--;
+    if (countdownEl) countdownEl.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(timer);
+      window.close();
+      setTimeout(() => {
+        const thankModal = document.getElementById('thankModal');
+        if (thankModal && thankModal.classList.contains('active')) {
+          closeThankModal();
+          showEndScreen();
+        }
+      }, 300);
+    }
+  }, 1000);
 }
 
 function closePreviewModal() { document.getElementById('previewModal').classList.remove('active'); }
@@ -497,7 +525,7 @@ function resetForm() {
   document.querySelectorAll('.radio-group label').forEach(l => l.classList.remove('selected'));
   document.getElementById('freetext').value = '';
   startTime = null;
-  formCompleted = false; 
+  formCompleted = false;
   document.getElementById('mainBlock').style.display = '';
   document.getElementById('endScreen').classList.remove('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
