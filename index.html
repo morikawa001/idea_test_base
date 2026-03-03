@@ -270,13 +270,9 @@ button:active { transform: scale(0.97); }
 
     <div class="block-title" style="margin-top:32px;">💬 お困りごと・アイデア</div>
 
-    <div class="q-block">
+   <div class="q-block">
   <label class="q-label">どのようなことでお困りですか。教えてください。 <span class="req">★必須</span></label>
   <div style="position: relative;">
-    <textarea id="freetext" required
-      style="min-height: 220px;"
-      oninput="this.previousElementSibling.style.display = this.value ? 'none' : 'block';"
-    ></textarea>
     <div id="freetext-guide" style="
       position: absolute; top: 0; left: 0; width: 100%;
       padding: 10px 13px;
@@ -284,6 +280,7 @@ button:active { transform: scale(0.97); }
       line-height: 2.0;
       pointer-events: none;
       white-space: pre;
+      z-index: 1;
       font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     ">【質問１】困っていることについてお聞かせください
 ・いつ：
@@ -292,8 +289,13 @@ button:active { transform: scale(0.97); }
 
 【質問２】新しい機器のアイデアや既存機器の
 　　　　　改善要望があればご記載ください</div>
+    <textarea id="freetext" required
+      style="min-height: 220px; position: relative; z-index: 2; background: transparent;"
+      oninput="document.getElementById('freetext-guide').style.display = this.value ? 'none' : 'block';"
+    ></textarea>
   </div>
 </div>
+
 
 
     <div class="btn-row">
