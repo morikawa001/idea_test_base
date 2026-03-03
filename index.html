@@ -271,14 +271,30 @@ button:active { transform: scale(0.97); }
     <div class="block-title" style="margin-top:32px;">💬 お困りごと・アイデア</div>
 
     <div class="q-block">
-      <label class="q-label">どのようなことでお困りですか。教えてください。 <span class="req">★必須</span></label>
-　　　　<textarea id="freetext" placeholder="【質問1】困っていることについてお聞かせください
-　　　　・いつ：
-　　　　・どのようなこと：
-　　　　・どのように解決したいですか：
+  <label class="q-label">どのようなことでお困りですか。教えてください。 <span class="req">★必須</span></label>
+  <div style="position: relative;">
+    <textarea id="freetext" required
+      style="min-height: 220px;"
+      oninput="this.previousElementSibling.style.display = this.value ? 'none' : 'block';"
+    ></textarea>
+    <div id="freetext-guide" style="
+      position: absolute; top: 0; left: 0; width: 100%;
+      padding: 10px 13px;
+      font-size: 0.88em; color: #aaa;
+      line-height: 2.0;
+      pointer-events: none;
+      white-space: pre;
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    ">【質問１】困っていることについてお聞かせください
+・いつ：
+・どのようなこと：
+・どのように解決したいですか：
 
-　　　　【質問2】新しい機器のアイデアや既存機器の改善要望があればご記載ください" required></textarea>
-    </div>
+【質問２】新しい機器のアイデアや既存機器の
+　　　　　改善要望があればご記載ください</div>
+  </div>
+</div>
+
 
     <div class="btn-row">
       <button type="button" class="btn-reset" onclick="resetForm()">🔄 やり直す</button>
@@ -529,6 +545,7 @@ function resetForm() {
   document.querySelectorAll('input[name="q3"]').forEach(r => r.checked = false);
   document.querySelectorAll('.radio-group label').forEach(l => l.classList.remove('selected'));
   document.getElementById('freetext').value = '';
+  document.getElementById('freetext-guide').style.display = 'block'; // ← 追加
   startTime = null;
   formCompleted = false;
   document.getElementById('mainBlock').style.display = '';
